@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package employee;
+option go_package = "chatapp/pkg";
+
+service EmployeeOps {
+  rpc Add (AddEmployeeRequest) returns (AddEmployeeResponse) {}
+}
+
+message AddEmployeeRequest{
+    Employee emp = 1;
+}
+message Employee{
+    string name = 1;
+    int32 age = 2;
+}
+
+message AddEmployeeResponse {
+  bool ok = 1;
+}

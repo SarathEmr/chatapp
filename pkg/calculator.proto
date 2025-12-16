@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package calculator;
+option go_package = "chatapp/pkg";
+
+service Calculator {
+  rpc Add (AddRequest) returns (AddResponse) {}
+}
+
+message AddRequest {
+  int64 num1 = 1;
+  int64 num2 = 2;
+}
+
+message AddResponse {
+  int64 sum = 1;
+}
