@@ -16,6 +16,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc"
+
+	"github.com/segmentio/kafka-go"
 )
 
 // func handler(w http.ResponseWriter, r *http.Request) {
@@ -46,8 +48,18 @@ func main() {
 
 	fmt.Println("Connected to MongoDB!")
 
+	kafkaTopic := "new_employee"
+
+	// set up kafka writer
+	kafkaWriter := kafka.NewWriter(kafka.WriterConfig{
+		Brokers:  []string{"kafka:9092"}, // Use the service name from docker-compose
+		Topic:    kafkaTopic,
+		Balancer: &kafka.LeastBytes{},
+	})
+	defer kafkaWriter.Close()
+
 	r := repo.New(*client)
-	ctrler := controller.Controller{Repo: r}
+	ctrler := controller.New(r, kafkaWriter)
 
 	r.Insert(ctx, model.Employee{
 		Name:        "Tom",
